@@ -1,0 +1,16 @@
+
+
+
+/* Skjul toggle knap som standard (desktop) */
+[data-menu-toggle] {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    [data-menu-toggle] {
+        display: block;
+    }
+    nav ul {
+        display: none;
+    }
+}
