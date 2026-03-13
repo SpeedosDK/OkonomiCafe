@@ -235,6 +235,18 @@ address {
     }
 }
 
+/* Mobil (0–1024px) */
+@media (max-width: 1024px) {
+    nav ul {
+        display: none;
+    }
+
+    [data-menu-toggle] {
+        display: block;
+    }
+}
+
+
 /* Desktop (1024px+) */
 @media (min-width: 1024px) {
 
@@ -244,13 +256,16 @@ address {
         padding: 2rem;
     }
 
-    /* Desktop menu */
     nav ul {
         display: flex;
     }
 
     [data-menu-toggle] {
         display: none;
+    }
+
+    [data-mobile-menu] {
+        display: none !important;
     }
 
     /* Hero layout */
