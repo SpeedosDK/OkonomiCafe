@@ -47,14 +47,28 @@ p {
 }
 
 .btn.primary {
-    background-color: #2f3b3f;
+    background-color: orange;
     color: #f7f4ee;
+    border-radius: 120px;
+}
+
+.btn.primary:hover {
+    background-color: transparent;
+    color: orange;
+    transition-duration: 500ms;
+    border: 2px solid orange;
 }
 
 .btn.secondary {
     background-color: transparent;
-    border: 2px solid #2f3b3f;
-    color: #2f3b3f;
+    border: 2px solid orange;
+    color: orange;
+    border-radius: 120px;
+}
+.btn.secondary:hover {
+    background-color: orange;
+    color: antiquewhite;
+    transition-duration: 500ms;
 }
 
 /* --------------------------------------------------
