@@ -31,21 +31,39 @@
 
         <ol>
             <li>
-                <h3>Trin 1: Kig forbi caféen</h3>
-                <p>Mød op på Zealand i åbningstiden – ingen tidsbestilling nødvendig.</p>
+                <h3>Trin 1: Udfyld formularen</h3>
+                <p>Beskriv kort hvad du gerne vil have hjælp med.</p>
             </li>
 
             <li>
-                <h3>Trin 2: Fortæl om dit dilemma</h3>
-                <p>Del dine spørgsmål i et trygt, uformelt rum uden dømme.</p>
+                <h3>Trin 2: Vent på svar</h3>
+                <p>Vi svarer dig på email.</p>
             </li>
 
             <li>
-                <h3>Trin 3: Få konkrete råd</h3>
+                <h3>Trin 3: Mød op og få konkrete råd</h3>
                 <p>Gå hjem med enkle værktøjer og et overblik du kan handle på.</p>
             </li>
         </ol>
     </section>
+
+    <section id="kontakt-formular" aria-labelledby="kontakt-formular-title">
+        <h2 id="kontakt-formular-title">Send os din besked</h2>
+
+        <form action="/kontakt-handler.php" method="post">
+            <label for="navn">Navn</label>
+            <input type="text" id="navn" name="navn" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="besked">Hvad vil du gerne have hjælp med?</label>
+            <textarea id="besked" name="besked" rows="5" required></textarea>
+
+            <button type="submit" class="btn primary">Send besked</button>
+        </form>
+    </section>
+
 
 
     <!-- FOR DIG -->
