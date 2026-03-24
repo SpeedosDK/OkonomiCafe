@@ -1,9 +1,10 @@
 <?php
 $navLinks = [
-        ["label" => "Sådan virker det", "href" => "#saadan-virker-det"],
-        ["label" => "For dig", "href" => "#for-dig"],
-        ["label" => "Bliv frivillig", "href" => "#frivillig"],
-        ["label" => "Kontakt", "href" => "#kontakt"],
+        ["label" => "Sådan virker det", "href" => "/saadan-virker-det"],
+        ["label" => "For dig", "href" => "/for-dig"],
+        ["label" => "Se kalender", "href" => "/kalender"],
+        ["label" => "Bliv frivillig", "href" => "frivillig"],
+        ["label" => "Kontakt", "href" => "/kontakt"],
 ];
 ?>
 <!DOCTYPE html>
