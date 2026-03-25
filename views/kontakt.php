@@ -2,11 +2,20 @@
 <section id="kontakt" aria-labelledby="kontakt-title">
         <h2 id="kontakt-title">Kontakt os</h2>
 
-        <p>Har du spørgsmål, brug for hjælp eller vil du høre mere om at blive frivillig?</p>
+    <section id="kontakt-formular" aria-labelledby="kontakt-formular-title">
+        <h2 id="kontakt-formular-title">Send os din besked</h2>
 
-        <address>
-            <p><strong>Adresse:</strong> Zealand, Campus Næstved</p>
-            <p><strong>Email:</strong> <a href="mailto:kontakt@oekonomi-cafeen.dk">kontakt@oekonomi-cafeen.dk</a></p>
-            <p><strong>Åbningstider:</strong> Tirsdag & torsdag kl. 14–17</p>
-        </address>
+        <form action="/kontakt-handler.php" method="post">
+            <label for="navn">Navn</label>
+            <input type="text" id="navn" name="navn" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="besked">Hvad vil du gerne have hjælp med?</label>
+            <textarea id="besked" name="besked" rows="5" required></textarea>
+
+            <button type="submit" class="btn primary">Send besked</button>
+        </form>
+    </section>
     </section>
