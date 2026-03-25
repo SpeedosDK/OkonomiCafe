@@ -16,6 +16,8 @@ $router->post('/login', 'HomeController@login');
 
 $router->get('/kalender-admin', 'HomeController@kalenderAdmin');
 $router->get('/logout', 'HomeController@logout');
+$router->post('/kalender-admin', 'HomeController@saveShift');
+
 $router->protect('/kalender-admin');
 
 $router->dispatch();

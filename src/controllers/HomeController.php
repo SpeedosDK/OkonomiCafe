@@ -29,6 +29,7 @@ class HomeController {
         $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
         $month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('n');
 
+
         if ($month < 1) { $month = 12; $year--; }
         if ($month > 12) { $month = 1; $year++; }
 
@@ -68,11 +69,26 @@ class HomeController {
         header('Location: /login?error=1');
         exit;
     }
-    public function kalenderAdmin(){
+    public function kalenderAdmin() {
+        $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
+        $month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('n');
+
+
+        if ($month < 1) { $month = 12; $year--; }
+        if ($month > 12) { $month = 1; $year++; }
+
+        $data = [
+            'year' => $year,
+            'month' => $month,
+        ];
+
+        extract($data);
+
         include __DIR__ . '/../../views/layouts/header.php';
         include __DIR__ . '/../../views/kalender-admin.php';
         include __DIR__ . '/../../views/layouts/footer.php';
     }
+
 
     public function logout(){
         session_start();
@@ -80,6 +96,37 @@ class HomeController {
         header('Location: /');
         exit;
     }
+    public function saveShift() {
+        $date = $_POST['date'] ?? null;
+        $name = $_POST['name'] ?? null;
+        $expertise = $_POST['expertise'] ?? null;
+
+        if (!$date || !$name || !$expertise) {
+            header("Location: /kalender-admin?error=1");
+            exit;
+        }
+
+        $file = __DIR__ . '/../../data/shifts.json';
+
+        // Hvis filen ikke findes, lav en tom
+        if (!file_exists($file)) {
+            file_put_contents($file, json_encode([]));
+        }
+
+        $shifts = json_decode(file_get_contents($file), true);
+
+        // Tilføj vagt
+        $shifts[$date][] = [
+            'name' => $name,
+            'expertise' => $expertise
+        ];
+
+        file_put_contents($file, json_encode($shifts, JSON_PRETTY_PRINT));
+
+        header("Location: /kalender-admin?success=1");
+        exit;
+    }
+
 }
 
 

@@ -324,3 +324,84 @@ input, textarea {
 label {
     font-weight: 600;
 }
+
+/* Kalender tabel */
+.kalender-tabel {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+}
+
+.kalender-tabel th,
+.kalender-tabel td {
+    border: 1px solid #ccc;
+    width: 14.28%;
+    height: 100px;
+    vertical-align: top;
+    padding: 6px;
+    background: white;
+}
+
+/* Tomme felter */
+.kalender-tabel .tom {
+    background: #f2f2f2;
+}
+
+/* Klikbare dage */
+.day-cell {
+    cursor: pointer;
+    position: relative;
+}
+
+/* Dage med vagter */
+.has-shifts {
+    background-color: #f0fff0 !important;
+    border: 2px solid #7ac27a !important;
+}
+
+/* Vagt-bokse */
+.shift {
+    margin-top: 4px;
+    padding: 2px 4px;
+    background: #e0ffe0;
+    border-left: 4px solid #4caf50;
+    font-size: 0.8rem;
+}
+
+/* Navn */
+.shift .name {
+    font-weight: bold;
+}
+
+/* Ekspertise */
+.shift .expertise {
+    font-style: italic;
+    color: #333;
+}
+
+
+/* Celler med vagter */
+.has-shifts {
+    background-color: #f0fff0; /* lys grøn baggrund */
+    border: 2px solid #7ac27a;
+}
+
+/* Selve vagten */
+.shift {
+    margin-top: 4px;
+    padding: 2px 4px;
+    background: #e0ffe0;
+    border-left: 4px solid #4caf50;
+    font-size: 0.8rem;
+}
+
+/* Navn */
+.shift .name {
+    font-weight: bold;
+}
+
+/* Ekspertise */
+.shift .expertise {
+    font-style: italic;
+    color: #333;
+}

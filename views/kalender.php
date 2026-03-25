@@ -1,7 +1,7 @@
 <?php
-/** @var array $data */
 /** @var int $year */
 /** @var int $month */
+
 // Første dag i måneden
 $firstDay = strtotime("$year-$month-01");
 
@@ -22,10 +22,14 @@ if ($nextMonth > 12) { $nextMonth = 1; $nextYear++; }
 
 // Navne på måneder
 $monthNames = [
-    1 => "Januar", 2 => "Februar", 3 => "Marts", 4 => "April",
-    5 => "Maj", 6 => "Juni", 7 => "Juli", 8 => "August",
-    9 => "September", 10 => "Oktober", 11 => "November", 12 => "December"
+        1 => "Januar", 2 => "Februar", 3 => "Marts", 4 => "April",
+        5 => "Maj", 6 => "Juni", 7 => "Juli", 8 => "August",
+        9 => "September", 10 => "Oktober", 11 => "November", 12 => "December"
 ];
+
+// Hent medarbejder-vagter
+$shiftsFile = __DIR__ . '/../data/shifts.json';
+$shifts = file_exists($shiftsFile) ? json_decode(file_get_contents($shiftsFile), true) : [];
 ?>
 
 <main class="kalender-side">
@@ -61,15 +65,29 @@ $monthNames = [
             $weekday = $startWeekday;
             for ($day = 1; $day <= $daysInMonth; $day++, $weekday++) {
 
-                echo "<td>$day</td>";
+                $dateString = sprintf("%04d-%02d-%02d", $year, $month, $day);
 
-                // Ny række hver søndag
+                $hasShifts = isset($shifts[$dateString]) ? "has-shifts" : "";
+                echo "<td class='day-cell $hasShifts' data-date='$dateString'>";
+
+                echo "<strong>$day</strong>";
+
+                if (isset($shifts[$dateString])) {
+                    foreach ($shifts[$dateString] as $shift) {
+                        echo "<p class='shift'>";
+                        echo "<span class='name'>{$shift['name']}</span><br>";
+                        echo "<span class='expertise'>{$shift['expertise']}</span>";
+                        echo "</p>";
+                    }
+                }
+
+                echo "</td>";
+
                 if ($weekday % 7 == 0) {
                     echo "</tr><tr>";
                 }
             }
 
-            // Fyld resten af rækken med tomme felter
             while ($weekday % 7 != 1) {
                 echo "<td class='tom'></td>";
                 $weekday++;
@@ -78,4 +96,39 @@ $monthNames = [
         </tr>
         </tbody>
     </table>
+
+    <!-- Popup -->
+    <dialog id="dayModal">
+        <h2 id="modalDate"></h2>
+        <section id="modalShifts"></section>
+        <form method="dialog">
+            <button>Luk</button>
+        </form>
+    </dialog>
+
+    <script>
+        document.querySelectorAll('.day-cell').forEach(cell => {
+            cell.addEventListener('click', () => {
+                const date = cell.dataset.date;
+                const shifts = cell.querySelectorAll('.name');
+
+                document.getElementById('modalDate').innerText = date;
+
+                let html = "";
+                shifts.forEach(nameSpan => {
+                    const expertiseSpan = nameSpan.nextElementSibling;
+                    html += "<p><strong>" + nameSpan.innerText + "</strong><br>" +
+                        expertiseSpan.innerText + "</p>";
+                });
+
+                if (html === "") {
+                    html = "<p>Ingen medarbejdere denne dag.</p>";
+                }
+
+                document.getElementById('modalShifts').innerHTML = html;
+                document.getElementById('dayModal').showModal();
+            });
+        });
+    </script>
+
 </main>
