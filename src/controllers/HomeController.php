@@ -43,6 +43,43 @@ class HomeController {
         include __DIR__ . '/../../views/kalender.php';
         include __DIR__ . '/../../views/layouts/footer.php';
     }
+    public function loginForm(){
+        $error = $_GET['error'] ?? null;
+
+        include __DIR__ . '/../../views/layouts/header.php';
+        include __DIR__ . '/../../views/login.php';
+        include __DIR__ . '/../../views/layouts/footer.php';
+    }
+
+
+    public function login(){
+        $username = $_POST['username'] ?? '';
+        $password = $_POST['password'] ?? '';
+
+        $users = include __DIR__ . '/../../data/users.php';
+
+        foreach($users as $user){
+            if ($user['username'] === $username && password_verify($password, $user['password'])){
+                $_SESSION['username'] = $user['username'];
+                header('Location: /kalender-admin');
+                exit;
+            }
+        }
+        header('Location: /login?error=1');
+        exit;
+    }
+    public function kalenderAdmin(){
+        include __DIR__ . '/../../views/layouts/header.php';
+        include __DIR__ . '/../../views/kalender-admin.php';
+        include __DIR__ . '/../../views/layouts/footer.php';
+    }
+
+    public function logout(){
+        session_start();
+        session_destroy();
+        header('Location: /');
+        exit;
+    }
 }
 
 
