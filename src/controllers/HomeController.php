@@ -106,26 +106,16 @@ class HomeController {
             exit;
         }
 
-        $file = __DIR__ . '/../../data/shifts.json';
+        require_once __DIR__ . '/../../core/Database.php';
+        $db = Database::getConnection();
 
-        // Hvis filen ikke findes, lav en tom
-        if (!file_exists($file)) {
-            file_put_contents($file, json_encode([]));
-        }
-
-        $shifts = json_decode(file_get_contents($file), true);
-
-        // Tilføj vagt
-        $shifts[$date][] = [
-            'name' => $name,
-            'expertise' => $expertise
-        ];
-
-        file_put_contents($file, json_encode($shifts, JSON_PRETTY_PRINT));
+        $stmt = $db->prepare("INSERT INTO shifts (date, name, expertise) VALUES (?, ?, ?)");
+        $stmt->execute([$date, $name, $expertise]);
 
         header("Location: /kalender-admin?success=1");
         exit;
     }
+
 
 }
 

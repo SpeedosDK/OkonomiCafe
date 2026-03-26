@@ -28,8 +28,21 @@ $monthNames = [
 ];
 
 // Hent medarbejder-vagter
-$shiftsFile = __DIR__ . '/../data/shifts.json';
-$shifts = file_exists($shiftsFile) ? json_decode(file_get_contents($shiftsFile), true) : [];
+require_once __DIR__ . '/../core/Database.php';
+$db = Database::getConnection();
+
+$stmt = $db->prepare("SELECT * FROM shifts WHERE date LIKE ?");
+$stmt->execute(["$year-$month-%"]);
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$shifts = [];
+foreach ($rows as $row) {
+    $shifts[$row['date']][] = [
+            'name' => $row['name'],
+            'expertise' => $row['expertise']
+    ];
+}
+
 ?>
 
 <main class="kalender-side">
