@@ -2,7 +2,7 @@
 return [
     [
         'username' => 'Thomas',
-        'password' => password_hash('1234', PASSWORD_DEFAULT),
+        'password' => password_hash('12', PASSWORD_DEFAULT),
     ],
     [
         'username' => 'Chris',

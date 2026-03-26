@@ -53,22 +53,24 @@ class HomeController {
     }
 
 
-    public function login(){
+    public function login() {
         $username = $_POST['username'] ?? '';
         $password = $_POST['password'] ?? '';
 
-        $users = include __DIR__ . '/../../data/users.php';
+        require_once __DIR__ . '/../../models/User.php';
 
-        foreach($users as $user){
-            if ($user['username'] === $username && password_verify($password, $user['password'])){
-                $_SESSION['username'] = $user['username'];
-                header('Location: /kalender-admin');
-                exit;
-            }
+        $user = User::findByUsername($username);
+
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['username'] = $user['username'];
+            header('Location: /kalender-admin');
+            exit;
         }
+
         header('Location: /login?error=1');
         exit;
     }
+
     public function kalenderAdmin() {
         $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
         $month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('n');
