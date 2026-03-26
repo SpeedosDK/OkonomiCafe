@@ -99,25 +99,38 @@ class HomeController {
         exit;
     }
     public function saveShift() {
-        $date = $_POST['date'] ?? null;
-        $name = $_POST['name'] ?? null;
-        $expertise = $_POST['expertise'] ?? null;
+        require_once __DIR__ . '/../../models/Shift.php';
 
-        if (!$date || !$name || !$expertise) {
-            header("Location: /kalender-admin?error=1");
-            exit;
-        }
+        $date = $_POST['date'];
+        $name = $_POST['name'];
+        $expertise = $_POST['expertise'];
 
-        require_once __DIR__ . '/../../core/Database.php';
-        $db = Database::getConnection();
+        Shift::create($date, $name, $expertise);
 
-        $stmt = $db->prepare("INSERT INTO shifts (date, name, expertise) VALUES (?, ?, ?)");
-        $stmt->execute([$date, $name, $expertise]);
-
-        header("Location: /kalender-admin?success=1");
+        header("Location: /kalender-admin");
         exit;
     }
+    public function deleteShift() {
+        require_once __DIR__ . '/../../models/Shift.php';
 
+        $id = $_POST['id'];
+        Shift::delete($id);
+
+        header("Location: /kalender-admin");
+        exit;
+    }
+    public function updateShift() {
+        require_once __DIR__ . '/../../models/Shift.php';
+
+        $id = $_POST['id'];
+        $name = $_POST['name'];
+        $expertise = $_POST['expertise'];
+
+        Shift::update($id, $name, $expertise);
+
+        header("Location: /kalender-admin");
+        exit;
+    }
 
 }
 

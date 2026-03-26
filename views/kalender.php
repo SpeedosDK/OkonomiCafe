@@ -2,8 +2,11 @@
 /** @var int $year */
 /** @var int $month */
 
+// Sørg for at month altid er 2-cifret (01, 02, 03...)
+$monthPadded = str_pad($month, 2, '0', STR_PAD_LEFT);
+
 // Første dag i måneden
-$firstDay = strtotime("$year-$month-01");
+$firstDay = strtotime("$year-$monthPadded-01");
 
 // Hvor mange dage er der i måneden?
 $daysInMonth = date('t', $firstDay);
@@ -27,14 +30,15 @@ $monthNames = [
         9 => "September", 10 => "Oktober", 11 => "November", 12 => "December"
 ];
 
-// Hent medarbejder-vagter
+// Hent vagter fra databasen
 require_once __DIR__ . '/../core/Database.php';
 $db = Database::getConnection();
 
 $stmt = $db->prepare("SELECT * FROM shifts WHERE date LIKE ?");
-$stmt->execute(["$year-$month-%"]);
+$stmt->execute(["$year-$monthPadded-%"]);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Organisér vagter efter dato
 $shifts = [];
 foreach ($rows as $row) {
     $shifts[$row['date']][] = [
@@ -42,7 +46,6 @@ foreach ($rows as $row) {
             'expertise' => $row['expertise']
     ];
 }
-
 ?>
 
 <main class="kalender-side">
@@ -101,7 +104,8 @@ foreach ($rows as $row) {
                 }
             }
 
-            while ($weekday % 7 != 1) {
+            // Udfyld resten af rækken
+            while ($weekday % 7 !== 1) {
                 echo "<td class='tom'></td>";
                 $weekday++;
             }
