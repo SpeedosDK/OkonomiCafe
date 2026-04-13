@@ -14,9 +14,13 @@ $navLinks = [
     <meta charset="UTF-8">
     <title>Økonomi-Caféen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 
 <body>
@@ -29,13 +33,13 @@ $navLinks = [
                 <li><a href="<?= htmlspecialchars($link['href']) ?>"><?= htmlspecialchars($link['label']) ?></a></li>
             <?php endforeach; ?>
         </ul>
+
         <?php if (isset($_SESSION['username'])): ?>
             <div class="logged-in-info">
                 Logget ind som <strong><?= htmlspecialchars($_SESSION['username']) ?></strong>
                 <a href="/logout" class="logout-link">Log ud</a>
             </div>
         <?php endif; ?>
-
 
         <button aria-label="Toggle menu" data-menu-toggle aria-expanded="false">
             <span>Menu</span>

@@ -44,18 +44,62 @@
                Femøvej 3, 4700 Næstved</p>
         </address>
         <figure class="map-container">
-            <iframe
-                src="https://www.openstreetmap.org/export/embed.html?bbox=11.7421%2C55.2166%2C11.7721%2C55.2326&amp;layer=mapnik&amp;marker=55.2246%2C11.7571"
-                title="Kort over Økonomi-Caféens placering"
-                loading="lazy"
-            ></iframe>
-            <figcaption>
-                <a href="https://www.openstreetmap.org/?mlat=55.224578&mlon=11.757058#map=16/55.224578/11.757058" target="_blank" rel="noopener">
-                    Se større kort
-                </a>
-            </figcaption>
+            <div id="frontpage-map" style="height: 400px;"></div>
+            <button id="frontFindVejBtn" class="btn primary" style="margin-top: 10px;">
+                Find vej fra min position
+            </button>
         </figure>
+
     </section>
 
 
 </main>
+
+<script>
+    const destLat = 55.224578;
+    const destLon = 11.757058;
+
+    // Opret kort
+    const frontMap = L.map('frontpage-map').setView([destLat, destLon], 16);
+
+    // Tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(frontMap);
+
+    // Marker
+    L.marker([destLat, destLon]).addTo(frontMap)
+        .bindPopup("Økonomi-Caféen<br>Femøvej 3, 4700 Næstved");
+
+    // Find vej funktion
+    function frontFindVej() {
+        if (!navigator.geolocation) {
+            alert("Din browser understøtter ikke geolokation.");
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(pos => {
+            const userLat = pos.coords.latitude;
+            const userLon = pos.coords.longitude;
+
+            L.marker([userLat, userLon]).addTo(frontMap)
+                .bindPopup("Din position").openPopup();
+
+            fetch(`https://router.project-osrm.org/route/v1/driving/${userLon},${userLat};${destLon},${destLat}?overview=full&geometries=geojson`)
+                .then(r => r.json())
+                .then(data => {
+                    const route = data.routes[0].geometry;
+                    const routeLayer = L.geoJSON(route).addTo(frontMap);
+                    frontMap.fitBounds(routeLayer.getBounds());
+                });
+
+        }, err => {
+            alert("Kunne ikke hente din position.");
+            console.error(err);
+        });
+    }
+
+    document.getElementById("frontFindVejBtn").addEventListener("click", frontFindVej);
+</script>
+
