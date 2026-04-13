@@ -15,7 +15,6 @@ body {
     background-color: #f7f4ee;
     color: #222;
     line-height: 1.6;
-    padding: 20px;
 }
 
 main {
@@ -425,4 +424,7 @@ label {
 .shift .expertise {
     font-style: italic;
     color: #333;
+}
+footer {
+    padding: 20px;
 }
