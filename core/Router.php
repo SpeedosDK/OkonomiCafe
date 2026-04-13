@@ -47,6 +47,7 @@ class Router {
         require_once __DIR__ . '/../src/controllers/' . $controllerName . '.php';
         $controller = new $controllerName();
         $controller->$methodName();
+        return;
     }
 
 }
