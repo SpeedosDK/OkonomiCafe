@@ -25,8 +25,8 @@ $lon = $data[0]['lon'] ?? 11.757058;
     <section id="kontakt-formular" aria-labelledby="kontakt-formular-title">
         <h2 id="kontakt-formular-title">Send os din besked</h2>
 
-        <form action="/kontakt-handler.php" method="post">
-            <label for="navn">Navn</label>
+        <form action="/send-message" method="post">
+        <label for="navn">Navn</label>
             <input type="text" id="navn" name="navn" required>
 
             <label for="email">Email</label>

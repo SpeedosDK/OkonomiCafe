@@ -432,3 +432,21 @@ footer {
 #kontakt {
     padding: 20px;
 }
+
+.mail-sent {
+    background: #4caf50;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    animation: fadeOut 4s forwards;
+    opacity: 1;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
+}
+

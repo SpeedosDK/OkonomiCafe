@@ -131,6 +131,57 @@ class HomeController {
         header("Location: /kalender-admin");
         exit;
     }
+    public function saveMessage() {
+        require_once __DIR__ . '/../../models/Message.php';
+
+        $name = $_POST['navn'];
+        $email = $_POST['email'];
+        $message = $_POST['besked'];
+
+        Message::create($name, $email, $message);
+
+        header("Location: /kontakt?sent=1");
+        exit;
+    }
+    public function messages() {
+        require_once __DIR__ . '/../../models/Message.php';
+
+        $messages = Message::all(); // ← HENTER BESKEDERNE
+
+        include __DIR__ . '/../../views/layouts/header.php';
+        include __DIR__ . '/../../views/messages.php';
+        include __DIR__ . '/../../views/layouts/footer.php';
+    }
+
+
+    public function messageRead() {
+        require_once __DIR__ . '/../../models/Message.php';
+
+        $id = $_POST['id'];
+        Message::markAsRead($id);
+
+        header("Location: /messages");
+        exit;
+    }
+
+    public function messageReply() {
+        require_once __DIR__ . '/../../models/Message.php';
+
+        $id = $_POST['id'];
+        $reply = $_POST['reply'];
+
+        Message::addReply($id, $reply);
+
+        $message = Message::find($id);
+
+        error_log("TEST-MAIL TIL: {$message['email']}");
+        error_log("EMNE: Svar på din besked til Økonomi-Caféen");
+        error_log("INDHOLD:\n$reply");
+
+        header("Location: /messages?sent=1");
+        exit;
+    }
+
 
 }
 

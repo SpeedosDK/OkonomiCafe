@@ -25,6 +25,15 @@ $router->get('/kalender-admin', 'HomeController@kalenderAdmin');
 $router->get('/logout', 'HomeController@logout');
 $router->post('/kalender-admin', 'HomeController@saveShift');
 
+
+$router->post('/send-message', 'HomeController@saveMessage');
+$router->get('/messages', 'HomeController@messages');
+
+$router->post('/messages/read', 'HomeController@messageRead');
+$router->post('/messages/reply', 'HomeController@messageReply');
+$router->protect('/messages');
+
+
 $router->protect('/kalender-admin');
 
 $router->dispatch();
