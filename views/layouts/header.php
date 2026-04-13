@@ -28,7 +28,6 @@ $navLinks = [
             <?php foreach ($navLinks as $link): ?>
                 <li><a href="<?= htmlspecialchars($link['href']) ?>"><?= htmlspecialchars($link['label']) ?></a></li>
             <?php endforeach; ?>
-            <li><button>Få hjælp</button></li>
         </ul>
         <?php if (isset($_SESSION['username'])): ?>
             <div class="logged-in-info">
@@ -48,7 +47,6 @@ $navLinks = [
             <?php foreach ($navLinks as $link): ?>
                 <li><a href="<?= htmlspecialchars($link['href']) ?>"><?= htmlspecialchars($link['label']) ?></a></li>
             <?php endforeach; ?>
-            <li><button>Få hjælp</button></li>
         </ul>
     </aside>
 </header>
