@@ -18,4 +18,24 @@
             <button type="submit" class="btn primary">Send besked</button>
         </form>
     </section>
+
+    <section id="find-os" aria-labelledby="find-os-title">
+        <h2 id="find-os-title">Find os</h2>
+        <address>
+            <p>Økonomi-Caféen<br>
+               Femøvej 3, 4700 Næstved</p>
+        </address>
+        <figure class="map-container">
+            <iframe
+                src="https://www.openstreetmap.org/export/embed.html?bbox=11.7421%2C55.2166%2C11.7721%2C55.2326&amp;layer=mapnik&amp;marker=55.2246%2C11.7571"
+                title="Kort over Økonomi-Caféens placering"
+                loading="lazy"
+            ></iframe>
+            <figcaption>
+                <a href="https://www.openstreetmap.org/?mlat=55.224578&mlon=11.757058#map=16/55.224578/11.757058" target="_blank" rel="noopener">
+                    Se større kort
+                </a>
+            </figcaption>
+        </figure>
+    </section>
     </section>
