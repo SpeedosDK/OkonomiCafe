@@ -7,15 +7,30 @@ class Shift
         $db = Database::getConnection();
         $monthPadded = str_pad($month, 2, '0', STR_PAD_LEFT);
 
-        $stmt = $db->prepare("SELECT * FROM shifts WHERE date LIKE ?");
+        $stmt = $db->prepare("
+            SELECT 
+                shifts.id,
+                shifts.date,
+                shifts.expertise,
+                shifts.user_id,
+                users.username AS name
+            FROM shifts
+            JOIN users ON users.id = shifts.user_id
+            WHERE shifts.date LIKE ?
+            ORDER BY shifts.date
+        ");
+
         $stmt->execute(["$year-$monthPadded-%"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function create(string $date, string $name, string $expertise): bool {
+    public static function create(string $date, int $user_id, string $expertise): bool {
         $db = Database::getConnection();
-        $stmt = $db->prepare("INSERT INTO shifts (date, name, expertise) VALUES (?, ?, ?)");
-        return $stmt->execute([$date, $name, $expertise]);
+        $stmt = $db->prepare("
+            INSERT INTO shifts (date, user_id, expertise)
+            VALUES (?, ?, ?)
+        ");
+        return $stmt->execute([$date, $user_id, $expertise]);
     }
 
     public static function delete(int $id): bool {
@@ -24,9 +39,13 @@ class Shift
         return $stmt->execute([$id]);
     }
 
-    public static function update(int $id, string $name, string $expertise): bool {
+    public static function update(int $id, int $user_id, string $expertise): bool {
         $db = Database::getConnection();
-        $stmt = $db->prepare("UPDATE shifts SET name = ?, expertise = ? WHERE id = ?");
-        return $stmt->execute([$name, $expertise, $id]);
+        $stmt = $db->prepare("
+            UPDATE shifts 
+            SET user_id = ?, expertise = ?
+            WHERE id = ?
+        ");
+        return $stmt->execute([$user_id, $expertise, $id]);
     }
 }

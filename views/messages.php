@@ -23,10 +23,10 @@
             <small>Sendt: <?= $msg['created_at'] ?></small>
 
             <?php if ($msg['reply']): ?>
-                <div class="reply-box">
+                <section class="reply-box">
                     <strong>Svar:</strong>
                     <p><?= nl2br(htmlspecialchars($msg['reply'])) ?></p>
-                </div>
+                </section>
             <?php endif; ?>
 
             <form method="POST" action="/messages/read">

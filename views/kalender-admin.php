@@ -2,6 +2,12 @@
 /** @var int $year */
 /** @var int $month */
 
+require_once __DIR__ . '/../models/Shift.php';
+require_once __DIR__ . '/../models/User.php';
+
+// Hent alle brugere til dropdown
+$users = User::getAll();
+
 // Sørg for at month altid er 2-cifret
 $monthPadded = str_pad($month, 2, '0', STR_PAD_LEFT);
 
@@ -31,7 +37,6 @@ $monthNames = [
 ];
 
 // Hent vagter fra databasen (via model)
-require_once __DIR__ . '/../models/Shift.php';
 $rows = Shift::getByMonth($year, $month);
 
 // Organisér vagter efter dato
@@ -39,7 +44,8 @@ $shifts = [];
 foreach ($rows as $row) {
     $shifts[$row['date']][] = [
             'id'        => $row['id'],
-            'name'      => $row['name'],
+            'user_id'   => $row['user_id'],
+            'name'      => $row['name'],       // username fra JOIN
             'expertise' => $row['expertise']
     ];
 }
@@ -48,11 +54,11 @@ foreach ($rows as $row) {
 <main class="kalender-admin">
     <h1>Admin – Kalender</h1>
 
-    <div class="kalender-navigation">
+    <section class="kalender-navigation">
         <a href="/kalender-admin?year=<?= $prevYear ?>&month=<?= $prevMonth ?>">← Forrige måned</a>
         <strong><?= $monthNames[$month] ?> <?= $year ?></strong>
         <a href="/kalender-admin?year=<?= $nextYear ?>&month=<?= $nextMonth ?>">Næste måned →</a>
-    </div>
+    </section>
 
     <table class="kalender-tabel">
         <thead>
@@ -96,7 +102,7 @@ foreach ($rows as $row) {
                                 type='button'
                                 class='edit-btn'
                                 data-id='{$shift['id']}'
-                                data-name='" . htmlspecialchars($shift['name'], ENT_QUOTES) . "'
+                                data-user_id='{$shift['user_id']}'
                                 data-expertise='" . htmlspecialchars($shift['expertise'], ENT_QUOTES) . "'
                                 data-date='{$dateString}'>
                                 Rediger
@@ -136,8 +142,15 @@ foreach ($rows as $row) {
         <form method="POST" action="/save-shift">
             <input type="hidden" name="date" id="adminDate">
 
-            <label>Navn</label>
-            <input type="text" name="name" required>
+            <label for="user_id">Medarbejder</label>
+            <select name="user_id" id="user_id" required>
+                <option value="">Vælg medarbejder</option>
+                <?php foreach ($users as $user): ?>
+                    <option value="<?= $user['id'] ?>">
+                        <?= htmlspecialchars($user['username']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
 
             <label>Ekspertise</label>
             <input type="text" name="expertise" required>
@@ -154,8 +167,14 @@ foreach ($rows as $row) {
         <form method="POST" action="/update-shift">
             <input type="hidden" name="id" id="editId">
 
-            <label>Navn</label>
-            <input type="text" name="name" id="editName" required>
+            <label for="editUserId">Medarbejder</label>
+            <select name="user_id" id="editUserId" required>
+                <?php foreach ($users as $user): ?>
+                    <option value="<?= $user['id'] ?>">
+                        <?= htmlspecialchars($user['username']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
 
             <label>Ekspertise</label>
             <input type="text" name="expertise" id="editExpertise" required>
@@ -169,7 +188,6 @@ foreach ($rows as $row) {
         // Klik på dag -> opret vagt
         document.querySelectorAll('.day-cell').forEach(cell => {
             cell.addEventListener('click', (e) => {
-                // Undgå at klik på rediger/slet åbner "opret"-modal
                 if (e.target.closest('button') || e.target.closest('form')) return;
 
                 const date = cell.dataset.date;
@@ -185,7 +203,7 @@ foreach ($rows as $row) {
         document.querySelectorAll('.edit-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.getElementById('editId').value = btn.dataset.id;
-                document.getElementById('editName').value = btn.dataset.name;
+                document.getElementById('editUserId').value = btn.dataset.user_id;
                 document.getElementById('editExpertise').value = btn.dataset.expertise;
 
                 document.getElementById('editModal').showModal();

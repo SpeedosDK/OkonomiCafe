@@ -22,7 +22,7 @@ $router->post('/update-shift', 'HomeController@updateShift');
 
 
 $router->get('/kalender-admin', 'HomeController@kalenderAdmin');
-$router->get('/logout', 'HomeController@logout');
+$router->post('/logout', 'HomeController@logout');
 $router->post('/kalender-admin', 'HomeController@saveShift');
 
 

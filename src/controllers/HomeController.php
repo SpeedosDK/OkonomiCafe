@@ -93,7 +93,6 @@ class HomeController {
 
 
     public function logout(){
-        session_start();
         session_destroy();
         header('Location: /');
         exit;
@@ -181,8 +180,6 @@ class HomeController {
         header("Location: /messages?sent=1");
         exit;
     }
-
-
 }
 
 

@@ -44,7 +44,7 @@
                Femøvej 3, 4700 Næstved</p>
         </address>
         <figure class="map-container">
-            <div id="frontpage-map" style="height: 400px;"></div>
+            <section id="frontpage-map" style="height: 400px;"></section>
             <button id="frontFindVejBtn" class="btn primary" style="margin-top: 10px;">
                 Find vej fra min position
             </button>

@@ -47,7 +47,7 @@ $lon = $data[0]['lon'] ?? 11.757058;
         </address>
 
         <figure class="map-container">
-            <div id="map" style="height: 400px;"></div>
+            <section id="map" style="height: 400px;"></section>
             <button id="findVejBtn" class="btn primary" style="margin-top: 10px;">
                 Find vej fra min position
             </button>

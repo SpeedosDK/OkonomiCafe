@@ -51,11 +51,11 @@ foreach ($rows as $row) {
 <main class="kalender-side">
     <h1>Kalender</h1>
 
-    <div class="kalender-navigation">
+    <nav class="kalender-navigation">
         <a href="/kalender?year=<?= $prevYear ?>&month=<?= $prevMonth ?>">← Forrige måned</a>
         <strong><?= $monthNames[$month] ?> <?= $year ?></strong>
         <a href="/kalender?year=<?= $nextYear ?>&month=<?= $nextMonth ?>">Næste måned →</a>
-    </div>
+    </nav>
 
     <table class="kalender-tabel">
         <thead>

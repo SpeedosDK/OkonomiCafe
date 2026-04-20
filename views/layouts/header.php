@@ -35,10 +35,13 @@ $navLinks = [
         </ul>
 
         <?php if (isset($_SESSION['username'])): ?>
-            <div class="logged-in-info">
+            <section class="logged-in-info">
                 Logget ind som <strong><?= htmlspecialchars($_SESSION['username']) ?></strong>
-                <a href="/logout" class="logout-link">Log ud</a>
-            </div>
+
+                <form action="/logout" method="POST" class="logout-form" style="display:inline;">
+                    <button type="submit" class="logout-button">Log ud</button>
+                </form>
+            </section>
         <?php endif; ?>
 
         <button aria-label="Toggle menu" data-menu-toggle aria-expanded="false">
