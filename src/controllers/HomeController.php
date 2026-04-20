@@ -99,16 +99,22 @@ class HomeController {
     }
     public function saveShift() {
         require_once __DIR__ . '/../../models/Shift.php';
+        require_once __DIR__ . '/../../models/ShiftUser.php';
 
         $date = $_POST['date'];
-        $name = $_POST['name'];
         $expertise = $_POST['expertise'];
+        $userIds = $_POST['user_ids']; // array
 
-        Shift::create($date, $name, $expertise);
+        $shiftId = Shift::create($date, $expertise);
+
+        foreach ($userIds as $uid) {
+            ShiftUser::assign($shiftId, $uid);
+        }
 
         header("Location: /kalender-admin");
         exit;
     }
+
     public function deleteShift() {
         require_once __DIR__ . '/../../models/Shift.php';
 
@@ -120,16 +126,26 @@ class HomeController {
     }
     public function updateShift() {
         require_once __DIR__ . '/../../models/Shift.php';
+        require_once __DIR__ . '/../../models/ShiftUser.php';
 
         $id = $_POST['id'];
-        $name = $_POST['name'];
         $expertise = $_POST['expertise'];
+        $userIds = $_POST['user_ids']; // array
 
-        Shift::update($id, $name, $expertise);
+        Shift::update($id, $expertise);
+
+        // Fjern gamle brugere
+        ShiftUser::deleteAllForShift($id);
+
+        // Tilføj nye
+        foreach ($userIds as $uid) {
+            ShiftUser::assign($id, $uid);
+        }
 
         header("Location: /kalender-admin");
         exit;
     }
+
     public function saveMessage() {
         require_once __DIR__ . '/../../models/Message.php';
 

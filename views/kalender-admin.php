@@ -4,6 +4,7 @@
 
 require_once __DIR__ . '/../models/Shift.php';
 require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../models/ShiftUser.php';
 
 // Hent alle brugere til dropdown
 $users = User::getAll();
@@ -44,8 +45,8 @@ $shifts = [];
 foreach ($rows as $row) {
     $shifts[$row['date']][] = [
             'id'        => $row['id'],
-            'user_id'   => $row['user_id'],
-            'name'      => $row['name'],       // username fra JOIN
+            'names'     => $row['names'],      // "Thomas, Maria"
+            'user_ids'  => $row['user_ids'],   // "1,2"
             'expertise' => $row['expertise']
     ];
 }
@@ -94,21 +95,19 @@ foreach ($rows as $row) {
                 if (isset($shifts[$dateString])) {
                     foreach ($shifts[$dateString] as $shift) {
                         echo "<p class='shift'>";
-                        echo "<span class='name'>{$shift['name']}</span><br>";
+                        echo "<span class='name'>{$shift['names']}</span><br>";
                         echo "<span class='expertise'>{$shift['expertise']}</span><br>";
 
-                        // Rediger-knap
                         echo "<button 
                                 type='button'
                                 class='edit-btn'
                                 data-id='{$shift['id']}'
-                                data-user_id='{$shift['user_id']}'
+                                data-user_ids='{$shift['user_ids']}'
                                 data-expertise='" . htmlspecialchars($shift['expertise'], ENT_QUOTES) . "'
                                 data-date='{$dateString}'>
                                 Rediger
                               </button>";
 
-                        // Slet-knap
                         echo "<form method='POST' action='/delete-shift' style='display:inline'>
                                 <input type='hidden' name='id' value='{$shift['id']}'>
                                 <button type='submit' class='delete-btn'>Slet</button>
@@ -125,7 +124,6 @@ foreach ($rows as $row) {
                 }
             }
 
-            // Udfyld resten af rækken
             while ($weekday % 7 !== 1) {
                 echo "<td class='tom'></td>";
                 $weekday++;
@@ -142,9 +140,8 @@ foreach ($rows as $row) {
         <form method="POST" action="/save-shift">
             <input type="hidden" name="date" id="adminDate">
 
-            <label for="user_id">Medarbejder</label>
-            <select name="user_id" id="user_id" required>
-                <option value="">Vælg medarbejder</option>
+            <label>Medarbejdere</label>
+            <select name="user_ids[]" multiple required>
                 <?php foreach ($users as $user): ?>
                     <option value="<?= $user['id'] ?>">
                         <?= htmlspecialchars($user['username']) ?>
@@ -167,8 +164,8 @@ foreach ($rows as $row) {
         <form method="POST" action="/update-shift">
             <input type="hidden" name="id" id="editId">
 
-            <label for="editUserId">Medarbejder</label>
-            <select name="user_id" id="editUserId" required>
+            <label>Medarbejdere</label>
+            <select name="user_ids[]" id="editUserIds" multiple required>
                 <?php foreach ($users as $user): ?>
                     <option value="<?= $user['id'] ?>">
                         <?= htmlspecialchars($user['username']) ?>
@@ -192,7 +189,7 @@ foreach ($rows as $row) {
 
                 const date = cell.dataset.date;
 
-                document.getElementById('adminModalDate').innerText = "Tilføj medarbejder: " + date;
+                document.getElementById('adminModalDate').innerText = "Tilføj vagt: " + date;
                 document.getElementById('adminDate').value = date;
 
                 document.getElementById('adminModal').showModal();
@@ -202,9 +199,17 @@ foreach ($rows as $row) {
         // Klik på rediger-knap -> rediger vagt
         document.querySelectorAll('.edit-btn').forEach(btn => {
             btn.addEventListener('click', () => {
+
                 document.getElementById('editId').value = btn.dataset.id;
-                document.getElementById('editUserId').value = btn.dataset.user_id;
                 document.getElementById('editExpertise').value = btn.dataset.expertise;
+
+                // Sæt valgte medarbejdere
+                const selected = btn.dataset.user_ids.split(',');
+                const select = document.getElementById('editUserIds');
+
+                [...select.options].forEach(opt => {
+                    opt.selected = selected.includes(opt.value);
+                });
 
                 document.getElementById('editModal').showModal();
             });

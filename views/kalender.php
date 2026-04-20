@@ -2,6 +2,8 @@
 /** @var int $year */
 /** @var int $month */
 
+require_once __DIR__ . '/../models/Shift.php';
+
 // Sørg for at month altid er 2-cifret (01, 02, 03...)
 $monthPadded = str_pad($month, 2, '0', STR_PAD_LEFT);
 
@@ -30,19 +32,14 @@ $monthNames = [
         9 => "September", 10 => "Oktober", 11 => "November", 12 => "December"
 ];
 
-// Hent vagter fra databasen
-require_once __DIR__ . '/../core/Database.php';
-$db = Database::getConnection();
-
-$stmt = $db->prepare("SELECT * FROM shifts WHERE date LIKE ?");
-$stmt->execute(["$year-$monthPadded-%"]);
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Hent vagter via Shift-modellen (JOIN + GROUP_CONCAT)
+$rows = Shift::getByMonth($year, $month);
 
 // Organisér vagter efter dato
 $shifts = [];
 foreach ($rows as $row) {
     $shifts[$row['date']][] = [
-            'name' => $row['name'],
+            'names'     => $row['names'],      // "Thomas, Maria"
             'expertise' => $row['expertise']
     ];
 }
@@ -91,7 +88,7 @@ foreach ($rows as $row) {
                 if (isset($shifts[$dateString])) {
                     foreach ($shifts[$dateString] as $shift) {
                         echo "<p class='shift'>";
-                        echo "<span class='name'>{$shift['name']}</span><br>";
+                        echo "<span class='name'>{$shift['names']}</span><br>";
                         echo "<span class='expertise'>{$shift['expertise']}</span>";
                         echo "</p>";
                     }
@@ -127,15 +124,17 @@ foreach ($rows as $row) {
         document.querySelectorAll('.day-cell').forEach(cell => {
             cell.addEventListener('click', () => {
                 const date = cell.dataset.date;
-                const shifts = cell.querySelectorAll('.name');
+                const shifts = cell.querySelectorAll('.shift');
 
                 document.getElementById('modalDate').innerText = date;
 
                 let html = "";
-                shifts.forEach(nameSpan => {
-                    const expertiseSpan = nameSpan.nextElementSibling;
-                    html += "<p><strong>" + nameSpan.innerText + "</strong><br>" +
-                        expertiseSpan.innerText + "</p>";
+                shifts.forEach(shift => {
+                    const name = shift.querySelector('.name').innerText;
+                    const expertise = shift.querySelector('.expertise').innerText;
+
+                    html += "<p><strong>" + name + "</strong><br>" +
+                        expertise + "</p>";
                 });
 
                 if (html === "") {

@@ -12,11 +12,13 @@ class Shift
                 shifts.id,
                 shifts.date,
                 shifts.expertise,
-                shifts.user_id,
-                users.username AS name
+                GROUP_CONCAT(users.username SEPARATOR ', ') AS names,
+                GROUP_CONCAT(users.id SEPARATOR ',') AS user_ids
             FROM shifts
-            JOIN users ON users.id = shifts.user_id
+            LEFT JOIN shift_user ON shift_user.shift_id = shifts.id
+            LEFT JOIN users ON users.id = shift_user.user_id
             WHERE shifts.date LIKE ?
+            GROUP BY shifts.id
             ORDER BY shifts.date
         ");
 
@@ -24,13 +26,11 @@ class Shift
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function create(string $date, int $user_id, string $expertise): bool {
+    public static function create(string $date, string $expertise): int {
         $db = Database::getConnection();
-        $stmt = $db->prepare("
-            INSERT INTO shifts (date, user_id, expertise)
-            VALUES (?, ?, ?)
-        ");
-        return $stmt->execute([$date, $user_id, $expertise]);
+        $stmt = $db->prepare("INSERT INTO shifts (date, expertise) VALUES (?, ?)");
+        $stmt->execute([$date, $expertise]);
+        return $db->lastInsertId();
     }
 
     public static function delete(int $id): bool {
@@ -39,13 +39,9 @@ class Shift
         return $stmt->execute([$id]);
     }
 
-    public static function update(int $id, int $user_id, string $expertise): bool {
+    public static function update(int $id, string $expertise): bool {
         $db = Database::getConnection();
-        $stmt = $db->prepare("
-            UPDATE shifts 
-            SET user_id = ?, expertise = ?
-            WHERE id = ?
-        ");
-        return $stmt->execute([$user_id, $expertise, $id]);
+        $stmt = $db->prepare("UPDATE shifts SET expertise = ? WHERE id = ?");
+        return $stmt->execute([$expertise, $id]);
     }
 }
