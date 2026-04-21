@@ -1,13 +1,32 @@
 <?php
+require_once __DIR__ . '/../../models/Message.php';
+
+$unreadCount = Message::countUnread();
+
 $navLinks = [
         ["label" => "Sådan virker det", "href" => "/saadan-virker-det"],
         ["label" => "For dig", "href" => "/for-dig"],
         ["label" => "Se kalender", "href" => "/kalender"],
-        ["label" => "Bliv frivillig", "href" => "frivillig"],
+        ["label" => "Bliv frivillig", "href" => "/frivillig"],
         ["label" => "Kontakt", "href" => "/kontakt"],
-        ["label" => "Kun for medarbejdere", "href" => "/login"],
 ];
+
+// Hvis logget ind → tilføj medarbejder-links
+if (isset($_SESSION['username'])) {
+    $navLinks[] = ["label" => "Kalender admin", "href" => "/kalender-admin"];
+    $label = "Beskeder";
+    if ($unreadCount > 0) {
+        $label .= " <span class='badge'>{$unreadCount}</span>";
+    }
+
+    $navLinks[] = ["label" => $label, "href" => "/messages"];
+
+} else {
+    // Hvis IKKE logget ind → vis login
+    $navLinks[] = ["label" => "Kun for medarbejdere", "href" => "/login"];
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="da">
 <head>
@@ -30,9 +49,14 @@ $navLinks = [
 
         <ul>
             <?php foreach ($navLinks as $link): ?>
-                <li><a href="<?= htmlspecialchars($link['href']) ?>"><?= htmlspecialchars($link['label']) ?></a></li>
+                <li>
+                    <a href="<?= htmlspecialchars($link['href']) ?>">
+                        <?= $link['label'] ?>
+                    </a>
+                </li>
             <?php endforeach; ?>
         </ul>
+
 
         <?php if (isset($_SESSION['username'])): ?>
             <section class="logged-in-info">
@@ -52,8 +76,13 @@ $navLinks = [
     <aside data-mobile-menu>
         <ul>
             <?php foreach ($navLinks as $link): ?>
-                <li><a href="<?= htmlspecialchars($link['href']) ?>"><?= htmlspecialchars($link['label']) ?></a></li>
+                <li>
+                    <a href="<?= htmlspecialchars($link['href']) ?>">
+                        <?= $link['label'] ?>
+                    </a>
+                </li>
             <?php endforeach; ?>
         </ul>
+
     </aside>
 </header>

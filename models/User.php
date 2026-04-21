@@ -3,7 +3,6 @@ require_once __DIR__ . '/../core/Database.php';
 
 class User {
 
-    // Bruges til login
     public static function findByUsername(string $username): ?array {
         $db = Database::getConnection();
 

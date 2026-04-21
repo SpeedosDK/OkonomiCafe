@@ -39,5 +39,9 @@ class Message {
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
+    public static function countUnread(): int {
+        $db = Database::getConnection();
+        $stmt = $db->query("SELECT COUNT(*) FROM messages WHERE is_read = 0");
+        return (int)$stmt->fetchColumn();
+    }
 }
