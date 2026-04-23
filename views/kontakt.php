@@ -21,6 +21,11 @@ $lon = $data[0]['lon'] ?? 11.757058;
 
 <section id="kontakt" aria-labelledby="kontakt-title">
     <h2 id="kontakt-title">Kontakt os</h2>
+<?php if (isset($_GET['sent'])): ?>
+    <p id="mail-sent" class="mail-sent">
+        ✔ Tak for din besked!
+    </p>
+<?php endif; ?>
 
     <section id="kontakt-formular" aria-labelledby="kontakt-formular-title">
         <h2 id="kontakt-formular-title">Send os din besked</h2>

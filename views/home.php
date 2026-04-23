@@ -19,21 +19,8 @@
             </ul>
         </nav>
 
-<!--        <figure class="hero-image">-->
-<!--            <img src="/images/hero.png" alt="Unge mennesker i caféen">-->
-<!--        </figure>-->
     </section>
 
-
-    <!-- SÅDAN VIRKER DET -->
-
-
-
-    <!-- FOR DIG -->
-
-
-
-    <!-- BLIV FRIVILLIG -->
 
 
     <!-- KONTAKT -->
